@@ -1,0 +1,49 @@
+
+			<?php
+			      $query = mysqli_query($conn,"SELECT * FROM taxtable LEFT JOIN taxtype ON taxtype.taxtypeid=taxtable.taxtypeid LEFT JOIN area ON area.areaid=taxtable.areaid WHERE date(`moment`)=CURDATE() AND userid=$userid order by taxid desc limit 1");
+			       
+			        if (mysqli_num_rows($query)==0){
+			            ?>
+			            <div class="col-md-12"><h1 class="text-center">No tax has been issued today</h1></div>
+			            <?php
+			        }else{
+			      
+			      while($row = mysqli_fetch_array($query)){
+			        $printid = $row['taxid'];
+			       
+			      ?>
+			    <div class="container">
+					<div class="text-center">
+						<input type="button" class="btn btn-success" value="Print" onclick="jQuery('#print-demo').print()" >
+					</div>
+			    </div><br><br>
+			<div class="col-12">
+		  		<div class="tickets card" id="print-demo">
+		            <img src="./img/logo.svg" class="universitylogo" alt="Logo">
+		            <p class="text-center">OFFICIAL RECEIPT
+		                <br><address class="text-center">Tax ID: <?php echo $row['taxnum']; ?>
+		                <br>Area: <?php echo $row['area']; ?>
+		                <br><?php echo $row['moment']; ?></address></p>
+		            <table class="table">
+		                <tbody>
+		                	<tr>
+		                        <td class="description">Tax Type:</td>
+		                        <td class="price"><?php echo $row['taxtype']; ?></td>
+		                    </tr>
+		                    <tr>
+		                        <td class="description">Amt GH₵:</td>
+		                        <td class="price"><?php echo $row['amtc']; ?></td>
+		                    </tr>
+		                    <tr>
+		                        <td class="total">Total</td>
+		                        <td class="total">GH₵<?php echo $row['amtc']; ?></td>
+		                    </tr>
+		                </tbody>
+		            </table>
+		            <p class="text-center">Issuer: <?php echo $row['collector']; ?></p>
+		        </div>
+	        </div>
+	        <?php
+      }
+      }
+      ?>
